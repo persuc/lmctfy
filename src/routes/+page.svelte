@@ -2,22 +2,116 @@
 	import Button from '~/components/Button.svelte';
 	import { copyText } from 'svelte-copy';
 	import anime from 'animejs/lib/anime.es.js';
+	import { page } from '$app/stores';
+	import { onMount } from 'svelte';
+
+	const prompt = $page.url.searchParams.get('prompt') ?? '';
+	let cursor: SVGSVGElement;
+	let input: HTMLDivElement;
+	let primaryButton: HTMLDivElement;
+
+	onMount(() => {
+		if (!prompt) {
+			return;
+		}
+
+		const inputBounds = input.getBoundingClientRect();
+		const inputHeight = inputBounds.bottom - inputBounds.top;
+
+		anime({
+			targets: cursor,
+			translateX: inputBounds.left + 20,
+			translateY: inputBounds.top + inputHeight / 2,
+			easing: 'easeInOutQuad',
+			duration: 2200,
+			complete: clickCursor(type)
+		});
+	});
+
+	function clickCursor(then: () => void) {
+		return () =>
+			anime({
+				targets: cursor,
+				scale: 0.8,
+				easing: 'easeInOutQuad',
+				direction: 'alternate',
+				duration: 100,
+				complete: then
+			});
+	}
+
+	function type() {
+		let idx = 0;
+		let interval = setInterval(() => {
+			if (idx >= prompt.length) {
+				clearInterval(interval);
+				moveToAskButton();
+				return;
+			}
+
+			query += prompt.charAt(idx);
+			idx += 1;
+		}, 200);
+	}
+
+	function moveToAskButton() {
+		const buttonBounds = primaryButton.getBoundingClientRect();
+		const buttonHeight = buttonBounds.bottom - buttonBounds.top;
+		const buttonWidth = buttonBounds.right - buttonBounds.left;
+
+		anime({
+			targets: cursor,
+			translateX: buttonBounds.left + buttonWidth / 2.5,
+			translateY: buttonBounds.top + buttonHeight / 2,
+			easing: 'easeInOutQuad',
+			duration: 1600,
+			complete: clickCursor(redirect)
+		});
+	}
+
+	function redirect() {
+		window.open(`https://claude.ai/chat/new?prompt=${prompt}`, '_self');
+	}
 
 	let link = '';
 	let query = '';
 
 	function getLink() {
+		if (prompt) {
+			return;
+		}
+
 		if (query == '') {
 			link = '';
 			return;
 		}
-		link = `https://claude.ai?prompt=${query}`;
+		link = `${window.location}?prompt=${encodeURIComponent(query)}`;
+		// https://claude.ai/chat/new?prompt=how+do+i+calculate+jerk
+		// link = `https://claude.ai?prompt=${query}`;
 	}
 
 	function copyLink() {
 		copyText(link);
 	}
 </script>
+
+<svg
+	width="2rem"
+	height="2rem"
+	viewBox="0 0 15 15"
+	fill="white"
+	bind:this={cursor}
+	class:hidden={!prompt}
+	class="absolute z-20 bg-white"
+>
+	<path
+		fill-rule="evenodd"
+		clip-rule="evenodd"
+		d="M3.29227 0.048984C3.47033 -0.032338 3.67946 -0.00228214 3.8274 0.125891L12.8587 7.95026C13.0134 8.08432 13.0708 8.29916 13.0035 8.49251C12.9362 8.68586 12.7578 8.81866 12.5533 8.82768L9.21887 8.97474L11.1504 13.2187C11.2648 13.47 11.1538 13.7664 10.9026 13.8808L8.75024 14.8613C8.499 14.9758 8.20255 14.8649 8.08802 14.6137L6.15339 10.3703L3.86279 12.7855C3.72196 12.934 3.50487 12.9817 3.31479 12.9059C3.1247 12.8301 3 12.6461 3 12.4414V0.503792C3 0.308048 3.11422 0.130306 3.29227 0.048984ZM4 1.59852V11.1877L5.93799 9.14425C6.05238 9.02363 6.21924 8.96776 6.38319 8.99516C6.54715 9.02256 6.68677 9.12965 6.75573 9.2809L8.79056 13.7441L10.0332 13.178L8.00195 8.71497C7.93313 8.56376 7.94391 8.38824 8.03072 8.24659C8.11753 8.10494 8.26903 8.01566 8.435 8.00834L11.2549 7.88397L4 1.59852Z"
+		fill="#000000"
+		class="bg-white"
+	/>
+</svg>
 
 <body
 	class="w-screen h-screen flex justify-center text-[var(--text-color)] bg-gradient-to-b from-[var(--bgFrom-color)] to-[var(--bgTo-color)]"
@@ -40,6 +134,7 @@
 		<div class="text-[48px] mt-11">Good day</div>
 		<div
 			id="input-div"
+			bind:this={input}
 			class="w-full h-[3.5rem] shrink-0 rounded-2xl mt-6 border border-[.5px] border-[var(--border-color)] flex items-center"
 		>
 			<!-- bg-gradient-to-b from-[var(--fgFrom-color)] to-[var(--fgTo-color)] focus:from-[var(--focusFrom-color)] focus:to-[var(--focusTo-color)]   -->
@@ -50,17 +145,19 @@
 				autofocus
 			/>
 			<Button handler={getLink} class="z-10">
-				Get link
-				<svg
-					xmlns="http://www.w3.org/2000/svg"
-					width="1em"
-					height="1em"
-					fill="currentColor"
-					viewBox="0 0 256 256"
-					><path
-						d="M240,127.89a16,16,0,0,1-8.18,14L63.9,237.9A16.15,16.15,0,0,1,56,240a16,16,0,0,1-15-21.33l27-79.95A4,4,0,0,1,71.72,136H144a8,8,0,0,0,8-8.53,8.19,8.19,0,0,0-8.26-7.47h-72a4,4,0,0,1-3.79-2.72l-27-79.94A16,16,0,0,1,63.84,18.07l168,95.89A16,16,0,0,1,240,127.89Z"
-					></path></svg
-				>
+				<div class="flex items-center gap-1" bind:this={primaryButton}>
+					{prompt ? 'Ask' : 'Get link'}
+					<svg
+						xmlns="http://www.w3.org/2000/svg"
+						width="1em"
+						height="1em"
+						fill="currentColor"
+						viewBox="0 0 256 256"
+						><path
+							d="M240,127.89a16,16,0,0,1-8.18,14L63.9,237.9A16.15,16.15,0,0,1,56,240a16,16,0,0,1-15-21.33l27-79.95A4,4,0,0,1,71.72,136H144a8,8,0,0,0,8-8.53,8.19,8.19,0,0,0-8.26-7.47h-72a4,4,0,0,1-3.79-2.72l-27-79.94A16,16,0,0,1,63.84,18.07l168,95.89A16,16,0,0,1,240,127.89Z"
+						></path></svg
+					>
+				</div>
 			</Button>
 		</div>
 		<div class:hidden={link == ''} class="my-4 flex gap-2 items-center">
