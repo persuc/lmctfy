@@ -1,5 +1,6 @@
 <script lang="ts">
 	import Button from '~/components/Button.svelte';
+	import { copyText } from 'svelte-copy';
 	import anime from 'animejs/lib/anime.es.js';
 
 	let link = '';
@@ -11,6 +12,10 @@
 			return;
 		}
 		link = `https://claude.ai?prompt=${query}`;
+	}
+
+	function copyLink() {
+		copyText(link);
 	}
 </script>
 
@@ -58,8 +63,9 @@
 				>
 			</Button>
 		</div>
-		<div class:hidden={link == ''} class="my-4">
+		<div class:hidden={link == ''} class="my-4 flex gap-2 items-center">
 			{link}
+			<Button handler={copyLink}>Copy</Button>
 		</div>
 		<div class="h-full place-content-end pb-4">
 			<svg
