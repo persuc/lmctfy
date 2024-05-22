@@ -1,0 +1,33 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer utilities {
+  :root {
+    --primary-color: theme(colors.primary.light);
+    --focusFrom-color: theme(colors.focusFrom.light);
+    --focusTo-color: theme(colors.focusTo.light);
+    --fgFrom-color: theme(colors.fgFrom.light);
+    --fgTo-color: theme(colors.fgTo.light);
+    --bgFrom-color: theme(colors.bgFrom.light);
+    --bgTo-color: theme(colors.bgTo.light);
+    --border-color: theme(colors.border.light);
+    --focusBorder-color: theme(colors.focusBorder.light);
+    --text-color: theme(colors.text.light);
+    --placeholder-color: theme(colors.placeholder.light);
+  }
+
+  :root .dark {
+    --primary-color: theme(colors.primary.dark);
+    --focusFrom-color: theme(colors.focusFrom.dark);
+    --focusTo-color: theme(colors.focusTo.dark);
+    --fgFrom-color: theme(colors.fgFrom.dark);
+    --fgTo-color: theme(colors.fgTo.dark);
+    --bgFrom-color: theme(colors.bgFrom.dark);
+    --bgTo-color: theme(colors.bgTo.dark);
+    --border-color: theme(colors.border.dark);
+    --focusBorder-color: theme(colors.focusBorder.dark);
+    --text-color: theme(colors.text.dark);
+    --placeholder-color: theme(colors.placeholder.dark);
+  }
+}
