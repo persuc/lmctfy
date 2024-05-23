@@ -139,7 +139,7 @@
 	/>
 </svelte:head>
 
-<div class="w-dvw h-dvw flex justify-center text-text relative mx-2">
+<div class="w-screen h-screen flex justify-center text-text relative px-2">
 	<div bind:this={cursor} class:hidden={!prompt} class="absolute z-20 top-0 left-0">
 		<Cursor width="2rem" height="2rem" />
 	</div>
@@ -191,9 +191,10 @@
 			{link}
 			<Button handler={copyLink}>Copy</Button>
 		</div>
-		<div class="h-full place-content-end pb-4">
-			<Brand height="0.8em" />
-		</div>
+	</div>
+
+	<div class="absolute w-screen h-dvh flex justify-center items-end pb-8 pointer-events-none">
+		<Brand height="0.8em" />
 	</div>
 </div>
 
