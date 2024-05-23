@@ -12,21 +12,29 @@
 	let input: HTMLDivElement;
 	let primaryButton: HTMLDivElement;
 
+	function getInputCoords(): [number, number] {
+		const inputBounds = input.getBoundingClientRect();
+		const inputHeight = inputBounds.bottom - inputBounds.top;
+		return [inputBounds.left + 20, inputBounds.top + inputHeight / 2];
+	}
+
 	onMount(() => {
 		if (!prompt) {
 			return;
 		}
 
-		const inputBounds = input.getBoundingClientRect();
-		const inputHeight = inputBounds.bottom - inputBounds.top;
-
 		anime({
 			targets: cursor,
-			translateX: inputBounds.left + 20,
-			translateY: inputBounds.top + inputHeight / 2,
 			easing: 'easeInOutQuad',
 			duration: 2200,
-			complete: clickCursor(type)
+			complete: clickCursor(type),
+			update: function (anim) {
+				const [x, y] = getInputCoords();
+				anime.set(cursor, {
+					translateX: (anim.progress / 100) * x,
+					translateY: (anim.progress / 100) * y
+				});
+			}
 		});
 	});
 
@@ -43,6 +51,19 @@
 	}
 
 	function type() {
+		anime({
+			targets: cursor,
+			easing: 'easeInOutQuad',
+			duration: 3000 + prompt.length * 20,
+			update: function (anim) {
+				const [x, y] = getInputCoords();
+				anime.set(cursor, {
+					translateX: x,
+					translateY: y
+				});
+			}
+		});
+
 		let idx = 0;
 		const inputElement = input.querySelector('input')!;
 		let interval = setInterval(
@@ -61,18 +82,28 @@
 		);
 	}
 
-	function moveToAskButton() {
+	function getAskButtonCoords(): [number, number] {
 		const buttonBounds = primaryButton.getBoundingClientRect();
 		const buttonHeight = buttonBounds.bottom - buttonBounds.top;
 		const buttonWidth = buttonBounds.right - buttonBounds.left;
+		return [buttonBounds.left + buttonWidth / 2 - 5, buttonBounds.top + buttonHeight / 2];
+	}
 
+	function moveToAskButton() {
 		anime({
 			targets: cursor,
-			translateX: buttonBounds.left + buttonWidth / 2.5,
-			translateY: buttonBounds.top + buttonHeight / 2,
 			easing: 'easeInOutQuad',
 			duration: 1600,
-			complete: clickCursor(redirect)
+			complete: clickCursor(redirect),
+			update: function (anim) {
+				const [px, py] = getInputCoords();
+				const [x, y] = getAskButtonCoords();
+				const progress = anim.progress / 100;
+				anime.set(cursor, {
+					translateX: (1 - progress) * px + progress * x,
+					translateY: (1 - progress) * py + progress * y
+				});
+			}
 		});
 	}
 
@@ -108,9 +139,7 @@
 	/>
 </svelte:head>
 
-<div
-	class="w-screen h-screen flex justify-center text-text bg-gradient-to-b from-bgFrom to-bgTo light:light dark:dark"
->
+<div class="w-dvw h-dvw flex justify-center text-text relative mx-2">
 	<div bind:this={cursor} class:hidden={!prompt} class="absolute z-20 top-0 left-0">
 		<Cursor width="2rem" height="2rem" />
 	</div>
@@ -158,7 +187,7 @@
 				</div>
 			</Button>
 		</div>
-		<div class:hidden={link == ''} class="my-4 flex gap-2 items-center">
+		<div class:hidden={link == ''} class="my-4 flex gap-2 items-center break-all">
 			{link}
 			<Button handler={copyLink}>Copy</Button>
 		</div>
