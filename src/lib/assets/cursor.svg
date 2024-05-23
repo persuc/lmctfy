@@ -1,0 +1,51 @@
+<svg viewBox="0 0 810 809.999993">
+  <defs>
+    <clipPath id="1fa7ebcc21">
+      <path d="M 340 480 L 506 480 L 506 729 L 340 729 Z M 340 480 " clip-rule="nonzero" />
+    </clipPath>
+    <clipPath id="ea5369b08e">
+      <path
+        d="M 340.566406 512.121094 L 424.375 480.644531 L 505.886719 697.695312 L 422.078125 729.167969 Z M 340.566406 512.121094 "
+        clip-rule="nonzero" />
+    </clipPath>
+    <clipPath id="2790a17b5f">
+      <path
+        d="M 340.566406 512.121094 L 424.375 480.644531 L 505.824219 697.523438 L 422.015625 729 Z M 340.566406 512.121094 "
+        clip-rule="nonzero" />
+    </clipPath>
+    <clipPath id="efd714b437">
+      <path d="M 194 129 L 587 129 L 587 625 L 194 625 Z M 194 129 " clip-rule="nonzero" />
+    </clipPath>
+    <clipPath id="d02e1344e7">
+      <path
+        d="M 8.871094 225.472656 L 379.222656 32.867188 L 586.875 432.152344 L 216.519531 624.757812 Z M 8.871094 225.472656 "
+        clip-rule="nonzero" />
+    </clipPath>
+    <clipPath id="b49bf24a34">
+      <path d="M 194.046875 129.167969 L 586.628906 431.6875 L 216.277344 624.289062 Z M 194.046875 129.167969 "
+        clip-rule="nonzero" />
+    </clipPath>
+  </defs>
+  <g clip-path="url(#1fa7ebcc21)">
+    <g clip-path="url(#ea5369b08e)">
+      <g clip-path="url(#2790a17b5f)">
+        <path fill="#ffffff"
+          d="M 340.566406 512.121094 L 424.375 480.644531 L 505.765625 697.367188 L 421.957031 728.839844 Z M 340.566406 512.121094 "
+          fill-opacity="1" fill-rule="nonzero" />
+      </g>
+    </g>
+  </g>
+  <g clip-path="url(#efd714b437)">
+    <g clip-path="url(#d02e1344e7)">
+      <g clip-path="url(#b49bf24a34)">
+        <path fill="#ffffff"
+          d="M 8.871094 225.472656 L 379.222656 32.867188 L 586.875 432.152344 L 216.519531 624.757812 Z M 8.871094 225.472656 "
+          fill-opacity="1" fill-rule="nonzero" />
+      </g>
+    </g>
+  </g>
+  <path stroke-linecap="butt" transform="matrix(33.749998, 0, 0, 33.749998, 0.0000035, 0.00002)" fill="none"
+    stroke-linejoin="miter"
+    d="M 6 3 L 18.000001 14 L 13.000001 15 L 16.000001 20.5 L 13.000001 22.000001 L 10 16 L 6 19 Z M 6 3 "
+    stroke="#000000" stroke-width="2" stroke-opacity="1" stroke-miterlimit="4" />
+</svg>

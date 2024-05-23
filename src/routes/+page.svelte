@@ -1,12 +1,14 @@
 <script lang="ts">
 	import Button from '~/components/Button.svelte';
+	import Cursor from '~/lib/assets/cursor.svg?component';
+	import Brand from '~/lib/assets/brand.svg?component';
 	import { copyText } from 'svelte-copy';
 	import anime from 'animejs/lib/anime.es.js';
 	import { page } from '$app/stores';
 	import { onMount } from 'svelte';
 
 	const prompt = $page.url.searchParams.get('prompt') ?? '';
-	let cursor: SVGSVGElement;
+	let cursor: HTMLElement;
 	let input: HTMLDivElement;
 	let primaryButton: HTMLDivElement;
 
@@ -17,11 +19,6 @@
 
 		const inputBounds = input.getBoundingClientRect();
 		const inputHeight = inputBounds.bottom - inputBounds.top;
-
-		// const cursorBounds = cursor.getBoundingClientRect();
-		// console.log(`cursor: (${cursorBounds.left}, ${cursorBounds.top})`);
-		// console.log(`input: (${inputBounds.left}, ${inputBounds.top})`);
-		// console.log(`translate: (${inputBounds.left + 20}, ${inputBounds.top + inputHeight / 2})`);
 
 		anime({
 			targets: cursor,
@@ -47,6 +44,7 @@
 
 	function type() {
 		let idx = 0;
+		const inputElement = input.querySelector('input')!;
 		let interval = setInterval(
 			() => {
 				if (idx >= prompt.length) {
@@ -56,6 +54,7 @@
 				}
 
 				query += prompt.charAt(idx);
+				inputElement.scrollLeft = inputElement.scrollWidth;
 				idx += 1;
 			},
 			3000 / prompt.length + 20
@@ -94,8 +93,6 @@
 			return;
 		}
 		link = `${window.location}?prompt=${encodeURIComponent(query)}`;
-		// https://claude.ai/chat/new?prompt=how+do+i+calculate+jerk
-		// link = `https://claude.ai?prompt=${query}`;
 	}
 
 	function copyLink() {
@@ -103,24 +100,20 @@
 	}
 </script>
 
+<svelte:head>
+	<title>lmctfy</title>
+	<meta
+		name="description"
+		content="Animated Claude questions like let me google that for you / lmgtfy"
+	/>
+</svelte:head>
+
 <div
-	class="w-screen h-screen flex justify-center text-[var(--text-color)] bg-gradient-to-b from-[var(--bgFrom-color)] to-[var(--bgTo-color)]"
+	class="w-screen h-screen flex justify-center text-text bg-gradient-to-b from-bgFrom to-bgTo light:light dark:dark"
 >
-	<svg
-		width="2rem"
-		height="2rem"
-		viewBox="0 0 24 24"
-		bind:this={cursor}
-		class:hidden={!prompt}
-		class="absolute z-20 bg-white top-0 left-0"
-	>
-		<polygon
-			fill="none"
-			stroke="#000000"
-			stroke-width="2"
-			points="6 3 18 14 13 15 16 20.5 13 22 10 16 6 19"
-		/>
-	</svg>
+	<div bind:this={cursor} class:hidden={!prompt} class="absolute z-20 top-0 left-0">
+		<Cursor width="2rem" height="2rem" />
+	</div>
 	<div class="w-[38rem] flex flex-col items-center min-h-screen">
 		<svg
 			xmlns="http://www.w3.org/2000/svg"
@@ -136,17 +129,17 @@
 				d="M64.48 33.54c-5.02 0-8.45-2.8-10.07-7.11a19.19 19.19 0 0 1-1.23-7.03c0-7.23 3.24-12.25 10.4-12.25 4.81 0 7.78 2.1 9.47 7.11h2.06l-.28-6.91c-2.88-1.86-6.48-2.8-10.86-2.8-6.17 0-11.42 2.76-14.34 7.74a16.77 16.77 0 0 0-2.22 8.65c0 5.53 2.61 10.43 7.51 13.15a17.51 17.51 0 0 0 8.73 2.06c4.78 0 8.57-.91 11.93-2.5l.87-7.62h-2.1c-1.26 3.48-2.76 5.57-5.25 6.68-1.22.55-2.76.83-4.62.83ZM86.13 7.15l.2-3.4h-1.42l-6.32 1.9v1.03l2.8 1.3v23.78c0 1.62-.83 1.98-3 2.25v1.74h10.75v-1.74c-2.18-.27-3-.63-3-2.25V7.16Zm42.75 29h.83l7.27-1.38v-1.78l-1.02-.08c-1.7-.16-2.14-.51-2.14-1.9V18.33l.2-4.07h-1.15l-6.87.99v1.74l.67.12c1.86.27 2.41.79 2.41 2.09v11.3c-1.78 1.38-3.48 2.25-5.5 2.25-2.24 0-3.63-1.14-3.63-3.8V18.34l.2-4.07h-1.18l-6.88.99v1.74l.71.12c1.86.27 2.41.79 2.41 2.09v10.43c0 4.42 2.5 6.52 6.48 6.52 3.04 0 5.53-1.62 7.4-3.87l-.2 3.87ZM108.9 22.08c0-5.65-3-7.82-8.42-7.82-4.78 0-8.25 1.98-8.25 5.26 0 .98.35 1.73 1.06 2.25l3.64-.48c-.16-1.1-.24-1.77-.24-2.05 0-1.86.99-2.8 3-2.8 2.97 0 4.47 2.09 4.47 5.45v1.1l-7.5 2.25c-2.5.68-3.92 1.27-4.87 2.65a5 5 0 0 0-.7 2.8c0 3.2 2.2 5.46 5.96 5.46 2.72 0 5.13-1.23 7.23-3.56.75 2.33 1.9 3.56 3.95 3.56 1.66 0 3.16-.67 4.5-1.98l-.4-1.38c-.58.16-1.14.24-1.73.24-1.15 0-1.7-.91-1.7-2.69v-8.26Zm-9.6 10.87c-2.05 0-3.32-1.19-3.32-3.28 0-1.42.67-2.25 2.1-2.73l6.08-1.93v5.84c-1.94 1.47-3.08 2.1-4.86 2.1Zm63.3 1.82v-1.78l-1.03-.08c-1.7-.16-2.13-.51-2.13-1.9V7.15l.2-3.4h-1.43l-6.32 1.9v1.03l2.8 1.3v7.82a8.83 8.83 0 0 0-5.37-1.54c-6.28 0-11.18 4.78-11.18 11.93 0 5.89 3.52 9.96 9.32 9.96 3 0 5.61-1.46 7.23-3.72l-.2 3.72h.84l7.27-1.38Zm-13.16-18.14c3 0 5.25 1.74 5.25 4.94v9a7.2 7.2 0 0 1-5.21 2.1c-4.3 0-6.48-3.4-6.48-7.94 0-5.1 2.49-8.1 6.44-8.1Zm28.53 4.5c-.56-2.64-2.18-4.14-4.43-4.14-3.36 0-5.69 2.53-5.69 6.16 0 5.37 2.84 8.85 7.43 8.85a8.6 8.6 0 0 0 7.39-4.35l1.34.36c-.6 4.66-4.82 8.14-10 8.14-6.08 0-10.27-4.5-10.27-10.9 0-6.45 4.55-10.99 10.63-10.99 4.54 0 7.74 2.73 8.77 7.47l-15.84 4.86v-2.14l10.67-3.31Z"
 			></path></svg
 		>
-		<div class="text-[48px] mt-11">Good day</div>
+		<div class="text-[48px] mt-11 font-display">Good day</div>
 		<div
-			id="input-div"
 			bind:this={input}
-			class="w-full h-[3.5rem] shrink-0 rounded-2xl mt-6 border border-[.5px] border-[var(--border-color)] flex items-center"
+			class="w-full h-[3.5rem] shrink-0 rounded-2xl mt-6 border border-[.5px] border-border flex items-center font-body bg-gradient-to-b from-focusFrom to-focusTo focus-within:shadow-soft transition-shadow"
 		>
 			<!-- bg-gradient-to-b from-[var(--fgFrom-color)] to-[var(--fgTo-color)] focus:from-[var(--focusFrom-color)] focus:to-[var(--focusTo-color)]   -->
 			<input
 				bind:value={query}
-				class="bg-transparent w-full h-full px-4 outline-none placeholder:opacity-100 placeholder:text-[var(--placeholder-color)]"
+				class="bg-transparent w-full h-full px-4 outline-none placeholder:opacity-100 placeholder:text-placeholder] tracking-wide"
 				placeholder="What can I help you with?"
+				readonly={prompt !== ''}
 				autofocus
 			/>
 			<Button handler={getLink} class="z-10">
@@ -170,68 +163,16 @@
 			<Button handler={copyLink}>Copy</Button>
 		</div>
 		<div class="h-full place-content-end pb-4">
-			<svg
-				height="10"
-				viewBox="0 0 110 12"
-				fill="currentColor"
-				xmlns="http://www.w3.org/2000/svg"
-				aria-label="Anthropic"
-				><path d="M26.92 2.43646H30.929V11.8011H33.4879V2.43646H37.4969V0.198895H26.92V2.43646Z"
-				></path><path
-					d="M22.3992 8.32044L17.0254 0.198895H14.1253V11.8011H16.5989V3.67956L21.9727 11.8011H24.8728V0.198895H22.3992V8.32044Z"
-				></path><path
-					d="M47.7326 4.8232H42.103V0.198895H39.544V11.8011H42.103V7.06077H47.7326V11.8011H50.2916V0.198895H47.7326V4.8232Z"
-				></path><path
-					d="M4.75962 0.198895L0 11.8011H2.66129L3.63471 9.36464H8.61422L9.58747 11.8011H12.2488L7.48914 0.198895H4.75962ZM4.49553 7.20994L6.12438 3.1326L7.75323 7.20994H4.49553Z"
-				></path><path
-					d="M71.4966 0C68.0506 0 65.611 2.48619 65.611 6.01657C65.611 9.51381 68.0506 12 71.4966 12C74.9256 12 77.348 9.51381 77.348 6.01657C77.348 2.48619 74.9256 0 71.4966 0ZM71.4966 9.67956C69.4836 9.67956 68.2553 8.28729 68.2553 6.01657C68.2553 3.71271 69.4836 2.32044 71.4966 2.32044C73.4926 2.32044 74.7038 3.71271 74.7038 6.01657C74.7038 8.28729 73.4926 9.67956 71.4966 9.67956Z"
-				></path><path
-					d="M107.27 7.90608C106.827 9.03315 105.94 9.67956 104.729 9.67956C102.716 9.67956 101.487 8.28729 101.487 6.01657C101.487 3.71271 102.716 2.32044 104.729 2.32044C105.94 2.32044 106.827 2.96685 107.27 4.09392H109.983C109.318 1.60773 107.322 0 104.729 0C101.283 0 98.843 2.48619 98.843 6.01657C98.843 9.51381 101.283 12 104.729 12C107.339 12 109.335 10.3757 110 7.90608H107.27Z"
-				></path><path d="M90.9615 0.198895L95.7212 11.8011H98.3313L93.5717 0.198895H90.9615Z"
-				></path><path
-					d="M85.5707 0.198895H79.7364V11.8011H82.2953V7.59116H85.5707C88.2832 7.59116 89.938 6.19889 89.938 3.89503C89.938 1.59116 88.2832 0.198895 85.5707 0.198895ZM85.4513 5.35359H82.2953V2.43646H85.4513C86.7137 2.43646 87.379 2.9337 87.379 3.89503C87.379 4.85635 86.7137 5.35359 85.4513 5.35359Z"
-				></path><path
-					d="M63.6492 3.72928C63.6492 1.54144 61.9944 0.198895 59.2819 0.198895H53.4476V11.8011H56.0065V7.25967H58.8553L61.4144 11.8011H64.2463L61.4127 6.91376C62.8349 6.38254 63.6492 5.26392 63.6492 3.72928ZM56.0065 2.43646H59.1625C60.4249 2.43646 61.0903 2.88398 61.0903 3.72928C61.0903 4.57459 60.4249 5.0221 59.1625 5.0221H56.0065V2.43646Z"
-				></path></svg
-			>
+			<Brand height="0.8em" />
 		</div>
 	</div>
 </div>
 
 <style>
 	:root {
-		font-family: '__copernicus_669e4a', '__copernicus_Fallback_669e4a', ui-serif, Georgia, Cambria,
-			'Times New Roman', Times, serif;
 		font-feature-settings: 'ss01';
 		/* font-weight: 400;
 		letter-spacing: -2.4px;
 		line-height: 48px; */
-	}
-
-	#input-div {
-		position: relative;
-	}
-
-	#input-div::before {
-		position: absolute;
-		content: '';
-		inset: 0.5px;
-		z-index: 1;
-		background-image: linear-gradient(
-			to bottom,
-			theme(colors.focusFrom.light),
-			theme(colors.focusTo.light)
-		);
-		z-index: 1;
-		opacity: 0;
-		transition: opacity 0.15s cubic-bezier(0.4, 0, 0.2, 1);
-		pointer-events: none;
-		border-radius: 1em;
-	}
-	#input-div > * {
-		z-index: 2;
-	}
-	#input-div:focus-within::before {
-		opacity: 1;
 	}
 </style>

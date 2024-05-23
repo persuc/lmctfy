@@ -3,31 +3,35 @@
 @tailwind utilities;
 
 @layer utilities {
-  :root {
-    --primary-color: theme(colors.primary.light);
-    --focusFrom-color: theme(colors.focusFrom.light);
-    --focusTo-color: theme(colors.focusTo.light);
-    --fgFrom-color: theme(colors.fgFrom.light);
-    --fgTo-color: theme(colors.fgTo.light);
-    --bgFrom-color: theme(colors.bgFrom.light);
-    --bgTo-color: theme(colors.bgTo.light);
-    --border-color: theme(colors.border.light);
-    --focusBorder-color: theme(colors.focusBorder.light);
-    --text-color: theme(colors.text.light);
-    --placeholder-color: theme(colors.placeholder.light);
+  .light {
+    --primary: #ba5b38;
+    --primary-light: #c4623e;
+    --focus-from: #f8f8f7;
+    --focus-to: #f8f8f7;
+    --fg-from: #f5f4ef;
+    --fg-to: #f5f4ef;
+    --bg-from: #f0eee5;
+    --bg-to: #f5f4ef;
+    --border: #d6d5d0;
+    --focus-border: 112, 107, 87, 0.25;
+    --text: #29261b;
+    --placeholder: #737164;
+    --shadow: rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0) 0px 0px 0px 0px, rgba(0, 0, 0, 0.025) 0px 4px 16px 0px;
   }
 
-  :root .dark {
-    --primary-color: theme(colors.primary.dark);
-    --focusFrom-color: theme(colors.focusFrom.dark);
-    --focusTo-color: theme(colors.focusTo.dark);
-    --fgFrom-color: theme(colors.fgFrom.dark);
-    --fgTo-color: theme(colors.fgTo.dark);
-    --bgFrom-color: theme(colors.bgFrom.dark);
-    --bgTo-color: theme(colors.bgTo.dark);
-    --border-color: theme(colors.border.dark);
-    --focusBorder-color: theme(colors.focusBorder.dark);
-    --text-color: theme(colors.text.dark);
-    --placeholder-color: theme(colors.placeholder.dark);
+  .dark {
+    --primary: #ae5630;
+    --primary-light: #ba5e36;
+    --focus-from: #393937;
+    --focus-to: #393937;
+    --fg-from: #2f2f2c;
+    --fg-to: 47, 47, 44, 0.3;
+    --bg-from: #2b2a27;
+    --bg-to: #2f2f2c;
+    --border: #6c6a60;
+    --focus-border: 108, 106, 96, 0.25;
+    --text: #f5f4ef;
+    --placeholder: #a5a39b;
+    --shadow: none;
   }
 }
